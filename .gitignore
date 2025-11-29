@@ -28,7 +28,7 @@ data/raw/*.json
 # Keep folder structure but ignore contents
 data/raw/*
 # !data/raw/.gitkeep
-# artifacts/clean/*
+artifacts/clean/*
 # !artifacts/clean/.gitkeep
 logs/*
 # !logs/.gitkeep
