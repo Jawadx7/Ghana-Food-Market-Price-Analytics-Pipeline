@@ -1,8 +1,11 @@
 import pandas as pd
-from transform.clean_prices import remove_hxl_header
 from config.logger_config import setup_logger
 from config.enums import LogType
 from datetime import datetime
+
+# transform functions
+from transform.clean_prices import remove_hxl_header
+from transform.clean_prices import standardize_column_names
 
 logger = setup_logger("start_data_transformation", LogType.TRANSFORMATION)
 
@@ -26,6 +29,7 @@ def transform_prices(df: pd.DataFrame) -> pd.DataFrame:
     df = remove_hxl_header(df)
 
     # Step 2: Standardize column names
+    df = standardize_column_names(df)
     
     # Step 3: Parse dates
     

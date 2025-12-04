@@ -24,3 +24,46 @@ def remove_hxl_header(df: pd.DataFrame) -> pd.DataFrame:
         logger.info("No HXL tag row found")
     
     return df
+
+
+def standardize_column_names(df: pd.DataFrame) -> pd.DataFrame:
+    """Clean column names to remove special characters and standardize
+    
+    Args:
+        df: DataFrame with original column names
+        
+    Returns:
+        DataFrame with standardized column names
+    """
+    logger.info("Standardizing column names")
+
+    original_columns = df.columns.tolist()
+    logger.debug(f"Original columns: {original_columns}")
+
+    # Column mapping
+    column_map = {
+        'date': 'date',
+        'admin1': 'region',
+        'admin2': 'district',
+        'market': 'market_name',
+        'market_id': 'market_code',
+        'latitude': 'latitude',
+        'longitude': 'longitude',
+        'category': 'category',
+        'commodity': 'product',
+        'commodity_id': 'product_code',
+        'unit': 'unit',
+        'priceflag': 'price_flag',
+        'pricetype': 'price_type',
+        'currency': 'currency',
+        'price': 'price_ghs',
+        'usdprice': 'price_usd'
+    }
+
+    df = df.rename(columns=column_map)
+
+    new_columns = df.columns.tolist()
+    logger.info(f"Renamed {len(column_map)} columns")
+    logger.debug(f"New columns: {new_columns}")
+
+    return df
