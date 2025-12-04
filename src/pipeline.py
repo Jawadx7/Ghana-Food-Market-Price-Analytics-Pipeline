@@ -29,7 +29,9 @@ def main():
     # print(extracted_prices_df.head())
 
     transformed_prices_df = transform_prices(extracted_prices_df)
-    print(transformed_prices_df.head())
+    print(transformed_prices_df.dtypes)
+    # print(transformed_prices_df['category'].nunique())
+    # print(transformed_prices_df['category'].unique())
 
 
 if __name__ == "__main__":

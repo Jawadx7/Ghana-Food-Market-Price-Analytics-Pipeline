@@ -67,3 +67,64 @@ def standardize_column_names(df: pd.DataFrame) -> pd.DataFrame:
     logger.debug(f"New columns: {new_columns}")
 
     return df
+
+
+def parse_dates(df: pd.DataFrame) -> pd.DataFrame:
+    """Convert date column to datetime format
+    Handles multiple date formats (MM/DD/YYYY, YYYY-MM-DD)
+    
+    Args:
+        df: DataFrame with date column as string
+        
+    Returns:
+        DataFrame with parsed date column
+    """
+    logger.info("Passing date columns")
+
+    original_date_dtypes = df["date"].dtype
+    logger.debug(f"Original date type: {original_date_dtypes}")
+
+    # Parse dates - handles both formats
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
+
+    null_dates = df["date"].isnull().sum()
+
+    if null_dates > 0:
+        logger.warning(f"Found {null_dates} unparseable dates")
+    
+    logger.info(f"Date range: {df['date'].min()} - {df["date"].max()}")
+    
+    return df
+
+
+def normalize_categories(df: pd.DataFrame) -> pd.DataFrame:
+    """Clean category values and remove wide-spaces
+
+    Args:
+        df: DataFrame with raw category values
+    
+    Returns:
+        DataFrame with cleaned category values
+    """
+
+    logger.info("Start category normalization")
+
+    original_categories = df['category'].unique()
+    logger.info(f"Found {len(original_categories)} unique categories")
+    logger.debug(f"Original categories: {original_categories}")
+
+    df['category'] = (
+        df['category']
+        .str.lower()
+        .str.strip()
+        .str.replace(r"[^\w\s]", "", regex=True)
+        .str.replace(r"\s+", "_", regex=True)
+    )
+
+    final_categories = df['category'].unique()
+    logger.debug(f"Final categories: {final_categories}")
+
+    categories = final_categories.tolist()
+    df['category'] = pd.Categorical(df['category'], categories=categories, ordered=False)
+
+    return df

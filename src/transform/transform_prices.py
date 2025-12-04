@@ -6,6 +6,8 @@ from datetime import datetime
 # transform functions
 from transform.clean_prices import remove_hxl_header
 from transform.clean_prices import standardize_column_names
+from transform.clean_prices import parse_dates
+from transform.clean_prices import normalize_categories
 
 logger = setup_logger("start_data_transformation", LogType.TRANSFORMATION)
 
@@ -32,6 +34,10 @@ def transform_prices(df: pd.DataFrame) -> pd.DataFrame:
     df = standardize_column_names(df)
     
     # Step 3: Parse dates
+    df = parse_dates(df)
+
+    # step 4: Normalize categories
+    df = normalize_categories(df)
     
     # Step 4: Convert to numeric types
     
