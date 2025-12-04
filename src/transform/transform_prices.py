@@ -4,10 +4,13 @@ from config.enums import LogType
 from datetime import datetime
 
 # transform functions
-from transform.clean_prices import remove_hxl_header
-from transform.clean_prices import standardize_column_names
-from transform.clean_prices import parse_dates
-from transform.clean_prices import normalize_categories
+from transform.clean_prices import (
+    remove_hxl_header,
+    standardize_column_names,
+    parse_dates,
+    normalize_categories,
+    clean_numeric_columns
+    )
 
 logger = setup_logger("start_data_transformation", LogType.TRANSFORMATION)
 
@@ -39,11 +42,12 @@ def transform_prices(df: pd.DataFrame) -> pd.DataFrame:
     # step 4: Normalize categories
     df = normalize_categories(df)
     
-    # Step 4: Convert to numeric types
+    # Step 5: Convert to numeric types
+    df = clean_numeric_columns(df)
     
-    # Step 5: Clean text columns
+    # Step 6: Clean text columns
     
-    # Step 6: Normalize units to per-kg
+    # Step 7: Normalize units to per-kg
     
     # Step 7: Detect outliers
     

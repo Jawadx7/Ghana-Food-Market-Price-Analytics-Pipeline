@@ -25,9 +25,6 @@ def main():
 
     logger.info(f"File extraction successful for : {raw_prices_path}")
 
-    # print(extracted_prices_df.isnull().sum())
-    # print(extracted_prices_df.head())
-
     transformed_prices_df = transform_prices(extracted_prices_df)
     print(transformed_prices_df.dtypes)
     # print(transformed_prices_df['category'].nunique())

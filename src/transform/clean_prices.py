@@ -128,3 +128,40 @@ def normalize_categories(df: pd.DataFrame) -> pd.DataFrame:
     df['category'] = pd.Categorical(df['category'], categories=categories, ordered=False)
 
     return df
+
+
+def clean_numeric_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Convert price, coordinate and other numeric columns to numeric types
+    
+    Args:
+        df: DataFrame with string numeric columns
+        
+    Returns:
+        DataFrame with proper numeric types
+    """
+    logger.info("Converting columns to numeric types")
+
+    numeric_columns = {
+        'price_ghs': 'float',
+        'price_usd': 'float',
+        'latitude': 'float',
+        'longitude': 'float',
+        'market_code': 'int',
+        'product_code': 'int'
+    }
+
+    for col, dtype in numeric_columns.items():
+        if col in df.columns:
+            if dtype == "float":
+                df[col] = pd.to_numeric(df[col], errors="coerce")
+            elif dtype == "int":
+                df[col] = pd.to_numeric(df[col], errors="coerce")
+                df[col] = df[col].astype('Int64')
+            else:
+                logger.warning(f"Unknown dtype '{dtype}' for column '{col}', skipping conversion.")
+        else:
+            logger.warning(f"Column '{col}' not found in DataFrame")
+
+    logger.info("Numeric conversion complete")
+
+    return df
