@@ -1,8 +1,0 @@
-2025-11-29 21:51:10 | INFO     | extract_prices       | extract_prices  | Reading file: data/wfp_food_prices_gha.csv
-2025-11-29 21:51:10 | ERROR    | extract_prices       | extract_prices  | File not found: data/wfp_food_prices_gha.csv
-2025-11-29 21:52:12 | INFO     | extract_prices       | extract_prices  | Reading file: data/raw/wfp_food_prices_gha.csv
-2025-11-29 21:53:19 | INFO     | extract_prices       | extract_prices  | Reading file: data/raw/wfp_food_prices_gha.csv
-2025-11-29 21:53:29 | INFO     | extract_prices       | extract_prices  | Reading file: data/raw/wfp_food_prices_gha.csv
-2025-11-29 21:53:53 | INFO     | extract_prices       | extract_prices  | Reading file: data/raw/wfp_food_prices_gha.csv
-2025-11-29 22:03:09 | INFO     | extract_prices       | extract_prices  | Reading file: data/raw/wfp_food_prices_gha.csv
-2025-11-29 22:04:07 | INFO     | extract_prices       | extract_prices  | Reading file: data/raw/wfp_food_prices_gha.csv

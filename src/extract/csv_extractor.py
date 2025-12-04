@@ -8,9 +8,10 @@ logger = setup_logger("extract_prices", LogType.EXTRACTION)
 def extract_prices(data_path: Path) -> pd.DataFrame:
     """Extracts the prices CSV file into a pandas DataFrame.
 
-    :param data_path: the path to the raw prices csv file.
+    Args:
+        data_path: the path to the raw prices csv file.
 
-    :Returns:
+    Returns:
         DataFrame on success, None on failure.
 
     >>> extracted_prices = extract_prices(example_file_path)

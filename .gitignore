@@ -7,31 +7,33 @@ __pycache__/
 venv/
 env/
 ENV/
-.venv
+.venv/
+*.pyc
 
-# IDEs
+# IDEs / OS junk
 .vscode/
 .idea/
 *.swp
 *.swo
 .DS_Store
 
-# Environment variables
+# Secrets / Environment
 .env
 
-# Data files
-data/raw/*.csv
-data/raw/*.json
-*.parquet
-*.pkl
-
-# Keep folder structure but ignore contents
+# Raw Data
 data/raw/*
-# !data/raw/.gitkeep
-artifacts/clean/*
-# !artifacts/clean/.gitkeep
+!data/raw/.gitkeep
+
+# Logs
 logs/*
-# !logs/.gitkeep
+!logs/.gitkeep
+
+# Artifacts / Outputs
+artifacts/clean/*
+!artifacts/clean/.gitkeep
+
+# Windows ADS streams
+*:Zone.Identifier
 
 # Pytest
 .pytest_cache/

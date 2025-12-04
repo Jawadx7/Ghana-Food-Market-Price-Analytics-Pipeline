@@ -1,12 +1,12 @@
 from config.logger_config import setup_logger
 from config.enums import LogType
 from pathlib import Path
-from tqdm import tqdm
 from dotenv import load_dotenv
 import os
 
 # methods imports
 from extract.csv_extractor import extract_prices
+from transform.transform_prices import transform_prices
 
 # setups and initializations
 load_dotenv()
@@ -14,17 +14,22 @@ logger = setup_logger("start_project_pipeline", LogType.PIPELINE)
 
 
 def main():    
-    logger.info("========== Pipeline Started ==========")
+    logger.info("========== DE Pipeline Started ==========")
     raw_prices_path = os.getenv("RAW_PRICES_PATH")
 
-    prices_df = extract_prices(Path(raw_prices_path))
+    extracted_prices_df = extract_prices(Path(raw_prices_path))
 
-    if prices_df is None:
+    if extracted_prices_df is None:
         logger.error("Extraction failed")
         return
 
-    logger.info(f"File extraction successful: {raw_prices_path}")
-    print(prices_df.shape)
+    logger.info(f"File extraction successful for : {raw_prices_path}")
+
+    # print(extracted_prices_df.isnull().sum())
+    # print(extracted_prices_df.head())
+
+    transformed_prices_df = transform_prices(extracted_prices_df)
+    print(transformed_prices_df.head())
 
 
 if __name__ == "__main__":
