@@ -9,7 +9,8 @@ from transform.clean_prices import (
     standardize_column_names,
     parse_dates,
     normalize_categories,
-    clean_numeric_columns
+    clean_numeric_columns,
+    clean_text_columns
     )
 
 logger = setup_logger("start_data_transformation", LogType.TRANSFORMATION)
@@ -46,12 +47,13 @@ def transform_prices(df: pd.DataFrame) -> pd.DataFrame:
     df = clean_numeric_columns(df)
     
     # Step 6: Clean text columns
+    df = clean_text_columns(df)
     
     # Step 7: Normalize units to per-kg
     
-    # Step 7: Detect outliers
+    # Step 8: Detect outliers
     
-    # Step 8: Calculate data quality score
+    # Step 9: Calculate data quality score
     
     # Remove temporary columns
 

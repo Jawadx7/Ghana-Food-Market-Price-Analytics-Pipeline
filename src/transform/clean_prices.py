@@ -165,3 +165,28 @@ def clean_numeric_columns(df: pd.DataFrame) -> pd.DataFrame:
     logger.info("Numeric conversion complete")
 
     return df
+
+
+def clean_text_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Standardize text columns (trim whitespace, uppercase regions, etc.)
+    
+    Args:
+        df: DataFrame with text columns
+        
+    Returns:
+        DataFrame with cleaned text
+    """
+    logger.info("Cleaning text columns")
+
+    text_columns = ["region", 'district', 'market_name', "product", "price_flag", "price_type", "currency"]
+
+    for col in text_columns:
+        if col in df.columns:
+            df[col] = df[col].astype(str).str.strip()
+
+            if col in ("region", "district"):
+                df[col] = df[col].str.upper()
+        else:
+            logger.warning(f"Column '{col}' not found in DataFrame")
+
+    return df
