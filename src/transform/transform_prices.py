@@ -10,8 +10,10 @@ from transform.clean_prices import (
     parse_dates,
     normalize_categories,
     clean_numeric_columns,
-    clean_text_columns
-    )
+    clean_text_columns,
+    normalize_units,
+    detect_outliers
+)
 
 logger = setup_logger("start_data_transformation", LogType.TRANSFORMATION)
 
@@ -50,12 +52,17 @@ def transform_prices(df: pd.DataFrame) -> pd.DataFrame:
     df = clean_text_columns(df)
     
     # Step 7: Normalize units to per-kg
-    
-    # Step 8: Detect outliers
-    
-    # Step 9: Calculate data quality score
+    df = normalize_units(df)
+
+    # Step 8: Remove duplicate entries
+    df = df.drop_duplicates().reset_index(drop=True)
+
+    # Step 9: Detect outliers
+    df = detect_outliers(df)
     
     # Remove temporary columns
+    df = df.drop(columns=['z_score'], errors='ignore')
+
 
     duration = (datetime.now() - start_time).total_seconds()
     final_shape = df.shape

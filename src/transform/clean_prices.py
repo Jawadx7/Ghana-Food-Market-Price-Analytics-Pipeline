@@ -1,6 +1,8 @@
 import pandas as pd
 from config.logger_config import setup_logger
 from config.enums import LogType
+import re
+import numpy as np
 
 logger = setup_logger("start_data_cleaning", LogType.TRANSFORMATION)
 
@@ -189,4 +191,78 @@ def clean_text_columns(df: pd.DataFrame) -> pd.DataFrame:
         else:
             logger.warning(f"Column '{col}' not found in DataFrame")
 
+    return df
+
+
+def normalize_units(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize unit values to standard units (e.g., per kg)
+
+    Args:
+        df: DataFrame with raw unit values
+
+    Returns:
+        DataFrame with normalized unit values
+    """
+
+    logger.info("Normalizing units to per-kg and dropping non-weight units")
+
+    df = df.copy()
+
+    # Standardize unit text
+    df["unit"] = df["unit"].astype(str).str.strip().str.upper()
+
+    # Extract numeric kg values ONLY for KG-based units
+    def extract_kg(unit):
+        match = re.match(r"(\d+)\s*KG", unit)
+        return int(match.group(1)) if match else None
+
+    df["unit_kg"] = df["unit"].apply(extract_kg)
+
+    # Drop non-kg units (Bunch, Tubers, etc.)
+    before = len(df)
+    df = df[df["unit_kg"].notna()]
+    after = len(df)
+
+    logger.info(f"Dropped {before - after} rows with non-weight units")
+
+    df["price_per_kg"] = df["price_ghs"] / df["unit_kg"]
+
+    if (df["price_per_kg"] <= 0).any():
+        logger.warning("Found non-positive price_per_kg values")
+    
+    return df
+    
+
+def detect_outliers(df, column='price_per_kg', std_threshold=3):
+    """
+    Detect price outliers using z-score method
+    Flags prices that are > 3 standard deviations from mean
+        
+    Args:
+        df: DataFrame with price data
+        column: Column to check for outliers
+        std_threshold: Number of standard deviations for outlier threshold
+            
+    Returns:
+        DataFrame with is_outlier flag
+    """
+    logger.info(f"Detecting outliers in {column} (threshold: {std_threshold} std dev)")
+        
+    # Calculate z-scores by product and region (prices vary by product/region)
+    df['z_score'] = df.groupby(['product', 'region'])[column].transform(
+        lambda x: np.abs((x - x.mean()) / x.std())
+    )
+        
+    # Flag outliers
+    df['is_outlier'] = df['z_score'] > std_threshold
+        
+    outlier_count = df['is_outlier'].sum()
+    outlier_pct = (outlier_count / len(df)) * 100
+        
+    logger.warning(f"Detected {outlier_count:,} outliers ({outlier_pct:.2f}% of data)")
+        
+    if outlier_count > 0:
+        outlier_samples = df[df['is_outlier']][['date', 'market_name', 'product', 'price_per_kg', 'z_score']].head(5)
+        logger.debug(f"Sample outliers:\n{outlier_samples.to_string()}")
+        
     return df
